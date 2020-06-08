@@ -1,3 +1,7 @@
 # Projeto-Pygame-2020.1
-![Screenshot](screenshot.png)
-Jogo desenvolvido em Pygame
+
+## Tetris
+
+![](https://media.giphy.com/media/26tn33aiTi1jkl6H6/giphy.gif)
+
+*Tetris* um jogo clássico
