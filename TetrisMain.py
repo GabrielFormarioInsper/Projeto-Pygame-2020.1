@@ -1,10 +1,12 @@
-# Pygame template - skeleton for a new pygame project
+# Jogo desenvolvido em Pygame 2020.1
 import pygame
 import random
 
+
+# Variaveis globais
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-RED = (100, 100, 100)
+GREEN = (100, 100, 100)
 RED = (255, 100, 0)
 
 WIDTH = 10
@@ -17,6 +19,8 @@ PAUSE = False
 divisor = 300
 font = "Arial"
 
+
+# Técnica para fazer formato das figuras do tetris 
 O = [[1, 1], [1, 1]]
 L = [[0, 0, 0], [1, 1, 1], [0, 0, 1]]
 J = [[0, 0, 1], [1, 1, 1], [0, 0, 0]]
@@ -25,7 +29,7 @@ I = [[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0]]
 Z = [[1, 0], [1, 1], [0, 1]]
 S = [[0, 1], [1, 1], [1, 0]]
 
-
+# Classe que representa o campo de jogar
 class Campo:
     def __init__(self, width, height, comeco_x=tamanho_bloco, comeco_y=tamanho_bloco):
         self.width = width
@@ -41,6 +45,9 @@ class Campo:
         self.figura_last_x = 0
         self.figura_last_y = 0
 
+# Todas as funçoes que fazem parte da Classe Campo
+        
+    # Funcao de desenho
     def draw(self, screen):
         pygame.draw.rect(screen, (0, 200, 100), (self.comeco_x, self.comeco_y, WIDTH * tamanho_bloco, HEIGHT * tamanho_bloco))
         for i in range(2, self.height + 2):
@@ -55,13 +62,14 @@ class Campo:
                                        (self.comeco_x + (j - 1) * tamanho_bloco + 1, self.comeco_y + (i - 1) * tamanho_bloco - 3),
                                        (self.comeco_x + j * tamanho_bloco - 3, self.comeco_y + (i - 1) * tamanho_bloco - 3),
                                        (self.comeco_x + j * tamanho_bloco - 3, self.comeco_y + (i - 2) * tamanho_bloco + 1)], 4)
-
+    #Funcao para adicionar figura
     def add_figura(self, figura):
         for i in range(len(figura.figura)):
             for j in range(len(figura.figura[i])):
                 if figura.figura[i][j]:
                     self.campo[j + figura.y][i + figura.x] = 1
-
+                    
+    # Funcao para checar a linha que a figura está/parou
     def checa_linha(self):
         self.pontuacao_up = 0
         for i in range(HEIGHT + 2):
@@ -87,14 +95,16 @@ class Campo:
             self.frames = 0
             self.k = 0
 
+    # Funcao para recomecar o game
     def recomecar(self):
         self.game = True
         self.campo = [[1] * 4 + [0] * (self.width - 6) + [1] * 4] * 2 + \
                      [([1] + [0] * self.width + [1]) for i in range(self.height)] + [[1] * (self.width + 2)]
         self.lines = 0
         self.pontuacao = 0
+        
 
-
+# Classe que representa as figuras do Tetris
 class Figura:
     def __init__(self, x, y, form, GAME_OVER, comeco_x=tamanho_bloco, comeco_y=tamanho_bloco):
         self.x = x
@@ -105,7 +115,9 @@ class Figura:
         self.figura = form
         self.prox_figura = self.figura_nova()
         self.vel_auto_baixo = 1000
-
+        
+        
+# Todas as funcoes que fazem parte da classe Figura
     def draw(self, screen):
         for i in range(len(self.figura)):
             for j in range(len(self.figura[i])):
@@ -124,7 +136,7 @@ class Figura:
                                                           self.comeco_y + (self.y + j - 1) * tamanho_bloco - 3),
                                                          (self.comeco_x + (self.x + i) * tamanho_bloco - 3,
                                                           self.comeco_y + (self.y + j - 2) * tamanho_bloco + 1)], 4)
-
+  #Funcoes de movimentacao da figura
     def move_p_baixo(self):
         self.y += 1
 
@@ -161,7 +173,8 @@ class Figura:
                 if forma_nova[i][j] and campo.campo[self.y + j][self.x + i]:
                     return False
         return True
-
+    
+    #Funcao de fim de jogo
     def game_over(self, campo):
         for i in range(len(self.figura)):
             for j in range(len(self.figura[i])):
@@ -187,11 +200,12 @@ class Figura:
             self.figura_nova()
             self.game_over(campo)
 
+# Funcao para colocar um figura aleatoria na tela 
     def recomecar(self):
         self.vel_auto_baixo = 1000
         return Figura(WIDTH // 2 - 1, 0, random.choice([O, L, J, T, I, Z, S]), False, tamanho_bloco, tamanho_bloco)
 
-
+# Funcao que define o main do jogo com a variavel do tamanho do bloco inserida
 def main(tamanho_bloco):
     global PAUSE
     pygame.init()
@@ -208,14 +222,16 @@ def main(tamanho_bloco):
 
 
     menu_left_line = (WIDTH + 4) * tamanho_bloco
-
+    
+# Loop principal do game
+    
     while not done:
         vel = 1 + campo.pontuacao // divisor
         figura.vel_auto_baixo = int(0.66 ** vel * 1515)
         pontuacao_print = str((6 - len(str(campo.pontuacao))) * '0' + str(campo.pontuacao))
         pontuacao_sum = pygame.font.SysFont(font, tamanho_bloco, 1).render(pontuacao_print, 1, RED)
 
-        # draw info on the window
+        # Desenha info na tela como Prox. Figura, Pontuacao, Linhas etc
         screen.fill((0, 255, 0))
         for i in range(HEIGHT):
             screen.blit(pygame.font.SysFont(font, int(tamanho_bloco * 0.7), True)
@@ -236,7 +252,8 @@ def main(tamanho_bloco):
                     .render("Level:", 1, RED), (menu_left_line, tamanho_bloco * 11))
         screen.blit(pygame.font.SysFont(font, tamanho_bloco, True)
                     .render(str(vel), 1, RED), (menu_left_line, tamanho_bloco * 12))
-
+        
+        # Quando o game estiver on
         if campo.game:
             campo.draw(screen)
             figura.draw(screen)
@@ -253,7 +270,8 @@ def main(tamanho_bloco):
                                            (tamanho_bloco * (i + WIDTH + 4) + 1, (j + 5.5) * tamanho_bloco - 3),
                                            (tamanho_bloco * (i + WIDTH + 5) - 3, (j + 5.5) * tamanho_bloco - 3),
                                            (tamanho_bloco * (i + WIDTH + 5) - 3, (j + 4.5) * tamanho_bloco + 1)], 4)
-
+    
+        # Verifica açao do player e realiza açoes 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     done = True
@@ -288,9 +306,11 @@ def main(tamanho_bloco):
                 if event.type == pygame.QUIT:
                     done = True
 
+            # Definindo variáveis de mouse e click para usar caso os botoes de menu forem acionados ao pressionar/clicar na tela          
             mouse = pygame.mouse.get_pos()
             click = pygame.mouse.get_pressed()
-
+            
+            # Caso o player pressiona "p" ou barra de espaço desenha na tela quadrados com botões de continuar, reiniciar ou sair do game
             if PAUSE:
                 b0x1 = tamanho_bloco * 3
                 b0x2 = tamanho_bloco * (WIDTH - 4)
@@ -316,25 +336,31 @@ def main(tamanho_bloco):
             screen.blit(pygame.font.SysFont(font, tamanho_bloco, True).render("EXIT", 1, (0, 0, 100)),
                         (b2x1 + WIDTH / 5 * tamanho_bloco, b2y1 + tamanho_bloco / 2))
 
+            # Recomeca o game da onde ele parou
             if (b1x1 + b1x2) > mouse[0] > b1x1 and (b1y1 + b1y2) > mouse[1] > b1y1 and click[0] == 1:
                 PAUSE = False
                 campo.recomecar()
                 figura = figura.recomecar()
                 pygame.time.set_timer(AUTOCAIR, figura.vel_auto_baixo)
+             
+            # Fecha o game
             elif (b2x1 + b2x2) > mouse[0] > b2x1 and (b2y1 + b2y2) > mouse[1] > b2y1 and click[0] == 1:
                 done = True
+                
+            # Recomeca o game do inicio 
             elif PAUSE and (b0x1 + b0x2) > mouse[0] > b0x1 and (b0y1 + b0y2) > mouse[1] > b0y1 and click[0] == 1:
                 PAUSE = False
 
         pygame.display.flip()
+        # FPS 
         clock.tick(60)
     pygame.quit()
 
-
+# Roda a funcao main
 main(tamanho_bloco)
 
 
 
 # Para nao esquecer:
-    # Partes de codigos foram feitas com base nos exemplos disponiveis pelos professores e tambem pelo site de programcao KidsCanCode 
-    # principalmente na parte de powerups e construcao de cenarios para o game.
+# Métodos de obtencao de figuras, algumas funçoes foram inspirados em trabalhos na 
+# internet contidos em tutoriais do YT, forums em sites de programacao ex: pygame 
