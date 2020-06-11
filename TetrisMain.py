@@ -1,6 +1,8 @@
 # Jogo desenvolvido em Pygame 2020.1
 import pygame
 import random
+from pygame import mixer
+from os import path
 
 
 # Variaveis globais
@@ -18,6 +20,14 @@ GAME_OVER = False
 PAUSE = False
 divisor = 300
 font = "Arial"
+
+som_dir = path.join(path.dirname(__file__), 'sons')
+
+pygame.mixer.init()
+
+mixer.music.load(path.join(som_dir, "musica.mp3"))
+mixer.music.set_volume(0.3)
+
 
 
 # Técnica para fazer formato das figuras do tetris 
@@ -209,7 +219,10 @@ class Figura:
 def main(tamanho_bloco):
     global PAUSE
     pygame.init()
+    pygame.mixer.init()
 
+    #Rodando musica de fundo
+    pygame.mixer.music.play(loops=-1)
 
     size = (tamanho_bloco * (WIDTH + 9), tamanho_bloco * (HEIGHT + 2))
     screen = pygame.display.set_mode(size)
