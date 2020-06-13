@@ -9,6 +9,7 @@ from os import path
 from pygame import mixer
 #from classes import *
 
+# Cores
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (100, 100, 100)
@@ -18,7 +19,7 @@ RED = (255, 100, 0)
 #Pasta que contêm os arquivos:
 som_dir = path.join(path.dirname(__file__), 'sons')
 
-
+# Variaveis globais
 WIDTH = 10
 HEIGHT = 15
 tamanho_bloco = 20

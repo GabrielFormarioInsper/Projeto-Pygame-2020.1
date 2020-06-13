@@ -120,32 +120,37 @@ class Figura:
     def move_p_baixo(self):
         self.y += 1
 
+    #Move pra esquerda 
     def move_p_esquerda(self):
         self.x -= 1
 
+    #Move pra direita
     def move_p_direita(self):
         self.x += 1
 
+    # Movimentacao 
     def movimentacao(self, campo, side):
-        new_x = self.x
-        new_y = self.y
+        novo_x = self.x
+        novo_y = self.y
         if side == "d":
-            new_y += 1
+            novo_y += 1
         elif side == "l":
-            new_x -= 1
+            novo_x -= 1
         elif side == "r":
-            new_x += 1
+            novo_x += 1
 
         for i in range(len(self.figura)):
             for j in range(len(self.figura[i])):
-                if self.figura[i][j] and campo.campo[new_y + j][new_x + i]:
+                if self.figura[i][j] and campo.campo[novo_y + j][novo_x + i]:
                     return False
         return True
 
+    # Rotacao do bloco
     def rotacao(self, n=1):
         for i in range(n):
             self.figura = list(zip(*reversed(self.figura)))
 
+    #Verifica se figura pode rotacionar
     def verifica_rotacao(self, campo):
         forma_nova = list(zip(*reversed(self.figura)))
         for i in range(len(forma_nova)):
@@ -161,12 +166,14 @@ class Figura:
                 if self.figura[i][j] and campo.campo[self.y + j][self.x + i]:
                     self.GAME_OVER = True
 
+    # Selecionar uma figura nova
     def figura_nova(self):
         self.prox_figura = random.choice([O, L, J, T, I, Z, S])
         for i in range(random.randint(1, 4)):
             self.prox_figura = list(zip(*reversed(self.prox_figura)))
         return self.prox_figura
 
+    # Movimentacao da figura    
     def move_figura(self, campo):
         if self.movimentacao(campo, "d"):
             self.move_p_baixo()

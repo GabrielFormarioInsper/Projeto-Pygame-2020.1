@@ -4,6 +4,7 @@ Created on Sat Jun 13 15:39:48 2020
 
 @author: Gabriel
 """
+# Importando bibliotecas necessarias
 import pygame
 from classes import *
 from assets import *
@@ -17,17 +18,23 @@ def main(tamanho_bloco):
     #Rodando musica de fundo
     pygame.mixer.music.play(loops=-1)
 
+    # Definindo tamanho da tela
     size = (tamanho_bloco * (WIDTH + 9), tamanho_bloco * (HEIGHT + 2))
     screen = pygame.display.set_mode(size)
+    #Nome do jogo
     pygame.display.set_caption("Tetris no Pygame")
+    #Variavale para loop principal
     done = False
+    #Objetos da classes Figura e Campo
     campo = Campo(WIDTH, HEIGHT, tamanho_bloco, tamanho_bloco)
     figura = Figura(WIDTH // 2 - 1, 0, random.choice([O, L, J, T, I, Z, S]), False, tamanho_bloco, tamanho_bloco)
+    #Variavel de velocidade do game
     clock = pygame.time.Clock()
+    #Setar o autocair das figuras
     pygame.time.set_timer(AUTOCAIR, figura.vel_auto_baixo)
 
-
-    menu_left_line = (WIDTH + 4) * tamanho_bloco
+    # Variavel de limite de linha do menu
+    lim_esq_menu = (WIDTH + 4) * tamanho_bloco
     
 # Loop principal do game
     
@@ -46,18 +53,18 @@ def main(tamanho_bloco):
                         .render(("+" + str((HEIGHT - i - 1) * 25)), 1, (200, 100, 100)),
                         ((WIDTH + 1) * tamanho_bloco + 3, tamanho_bloco * (i + 1)))
         screen.blit(pygame.font.SysFont(font, tamanho_bloco, True)
-                    .render("Pontuacao:", 1, RED), (menu_left_line, tamanho_bloco))
-        screen.blit(pontuacao_sum, (menu_left_line, tamanho_bloco * 2))
+                    .render("Pontuacao:", 1, RED), (lim_esq_menu, tamanho_bloco))
+        screen.blit(pontuacao_sum, (lim_esq_menu, tamanho_bloco * 2))
         screen.blit(pygame.font.SysFont(font, tamanho_bloco, True)
-                    .render("Prox. Figura", 1, RED), (menu_left_line, tamanho_bloco * 3))
+                    .render("Prox. Figura", 1, RED), (lim_esq_menu, tamanho_bloco * 3))
         screen.blit(pygame.font.SysFont(font, tamanho_bloco, True)
-                    .render("Linhas:", 1, RED), (menu_left_line, tamanho_bloco * 9))
+                    .render("Linhas:", 1, RED), (lim_esq_menu, tamanho_bloco * 9))
         screen.blit(pygame.font.SysFont(font, tamanho_bloco, True)
-                    .render(str(campo.lines), 1, RED), (menu_left_line, tamanho_bloco * 10))
+                    .render(str(campo.lines), 1, RED), (lim_esq_menu, tamanho_bloco * 10))
         screen.blit(pygame.font.SysFont(font, tamanho_bloco, True)
-                    .render("Level:", 1, RED), (menu_left_line, tamanho_bloco * 11))
+                    .render("Level:", 1, RED), (lim_esq_menu, tamanho_bloco * 11))
         screen.blit(pygame.font.SysFont(font, tamanho_bloco, True)
-                    .render(str(vel), 1, RED), (menu_left_line, tamanho_bloco * 12))
+                    .render(str(vel), 1, RED), (lim_esq_menu, tamanho_bloco * 12))
         
         # Quando o game estiver on
         if campo.game:
@@ -65,6 +72,7 @@ def main(tamanho_bloco):
             figura.draw(screen)
             campo.fly_points(screen)
 
+            # Loop para realizar desenho da proxima figura a aparecer
             for i in range(len(figura.prox_figura)):
                 for j in range(len(figura.prox_figura[i])):
                     if figura.prox_figura[i][j]:
@@ -106,7 +114,7 @@ def main(tamanho_bloco):
                         pygame.time.set_timer(AUTOCAIR, figura.vel_auto_baixo)
                 elif event.type == AUTOCAIR:
                     figura.move_figura(campo)
-
+        # Saida do game
         if not campo.game or PAUSE or figura.GAME_OVER:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -118,10 +126,12 @@ def main(tamanho_bloco):
             
             # Caso o player pressiona "p" ou barra de espaço desenha na tela quadrados com botões de continuar, reiniciar ou sair do game
             if PAUSE:
+                # Variaveis do bloco
                 b0x1 = tamanho_bloco * 3
                 b0x2 = tamanho_bloco * (WIDTH - 4)
                 b0y1 = tamanho_bloco * 3
                 b0y2 = tamanho_bloco * 2
+                #Dsenha o bloco
                 pygame.draw.rect(screen, (0, 100, 200), (b0x1, b0y1, b0x2, b0y2))
                 screen.blit(pygame.font.SysFont(font, tamanho_bloco, True).render("Continuar", 1, (0, 0, 100)),
                             (b0x1 + WIDTH / 8 * tamanho_bloco, b0y1 + tamanho_bloco / 2))
