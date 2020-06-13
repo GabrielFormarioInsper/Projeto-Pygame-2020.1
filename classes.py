@@ -63,6 +63,7 @@ class Campo:
                 self.pontuacao_up += self.pontuacao_plus
                 self.pontuacao += self.pontuacao_plus
 
+    # Desenha na tela a pontucao do jogador ao realizar a linha completa , os pontos "voam" na tela
     def fly_points(self, screen):
         if self.k > 0 and self.frames < 80:
             pontuacao_plus = pygame.font.SysFont(font, int(tamanho_bloco + tamanho_bloco / 4 * self.k)) \
