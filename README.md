@@ -8,7 +8,7 @@
 
 Descrição: Nesse projeto, fiz uma reprodução do clássico jogo Tetris para o Pygame, para jogar e preciso fazer uma linha completa com as figuras disponíveis e assim acumular pontos. Com as setas do teclado o jogador movimenta a figura, especialmente a seta superior serve para rotacionar e figura e ver aonde encaixa-la melhor, ou seja, semelhante ao clássico game. Para rodar o jogo, rode o arquivo ` Tetris.py` .
 
-Link do vídeo que mostra o jogo funcionado: 
+Link do vídeo que mostra o jogo funcionado: https://www.youtube.com/watch?v=9JHE8YkedrU&feature=youtu.be
 
 Observações:
 
