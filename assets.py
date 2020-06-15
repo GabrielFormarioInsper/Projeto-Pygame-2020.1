@@ -58,3 +58,7 @@ assets['acerto'] = mixer.Sound(path.join(som_dir, "jogada1.wav"))
 mixer.Sound.set_volume(assets['acerto'] ,0.5)
 assets['intro'] = mixer.Sound(path.join(som_dir, "intro.wav"))
 mixer.Sound.set_volume(assets['intro'] ,0.5)
+
+# Gostaria de ressaltar aqui a importância que alguns, tutorias pela internet que serviram de inspiração para a realização deste projeto, 
+# entre eles vou citar alguns: freeCodeCamp.org, Tech with Tim, forum do site Pygame. Estes me ajudaram a realizar o código em diversos 
+# momentos para entender e aplicar melhor alguns códigos.
