@@ -4,9 +4,9 @@ Created on Sat Jun 13 15:26:38 2020
 
 @author: Gabriel
 """
+#Importando bibliotecas necessárias
 import pygame
 import random
-
 from assets import *
 
 # Classe que representa o campo de jogar
@@ -14,7 +14,7 @@ class Campo:
     def __init__(self, width, height, comeco_x=tamanho_bloco, comeco_y=tamanho_bloco):
         self.width = width
         self.height = height
-        self.campo = [[1] * 4 + [0] * (self.width - 6) + [1] * 4] * 2 + \
+        self.campo = [[1] * 4 + [0] * (self.width - 7) + [1] * 4] * 2 + \
                      [([1] + [0] * self.width + [1]) for i in range(self.height)] + [[1] * (self.width + 2)]
         self.pontuacao = 0
         self.k = self.lines = 0
@@ -49,7 +49,7 @@ class Campo:
                 if figura.figura[i][j]:
                     self.campo[j + figura.y][i + figura.x] = 1
                     
-    # Funcao para checar a linha que a figura está/parou
+    # Funcao para checar a linha que a figura está/parou e aumenta pontuação caso tenha linha completa
     def checa_linha(self):
         self.pontuacao_up = 0
         for i in range(HEIGHT + 2):
@@ -62,8 +62,10 @@ class Campo:
                 self.pontuacao_plus = 100 * (self.k ** 2 - (self.k - 1) ** 2) + 25 * (self.height - i + 1)
                 self.pontuacao_up += self.pontuacao_plus
                 self.pontuacao += self.pontuacao_plus
+                #Musica de acerto
+                assets['acerto'].play()
 
-    # Desenha na tela a pontucao do jogador ao realizar a linha completa , os pontos "voam" na tela
+    # Desenha na tela pontos "que voam" ao jogador completar uma linha completa
     def fly_points(self, screen):
         if self.k > 0 and self.frames < 80:
             pontuacao_plus = pygame.font.SysFont(font, int(tamanho_bloco + tamanho_bloco / 4 * self.k)) \

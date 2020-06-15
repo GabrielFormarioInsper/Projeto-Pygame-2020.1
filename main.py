@@ -12,11 +12,18 @@ from assets import *
 # Funcao que define o main do jogo com a variavel do tamanho do bloco inserida
 def main(tamanho_bloco):
     global PAUSE
+    # Início pygame
     pygame.init()
+
+    #Início música
     pygame.mixer.init()
+
+    #Roda aúdio de introdução
+    assets['intro'].play()
 
     #Rodando musica de fundo
     pygame.mixer.music.play(loops=-1)
+
 
     # Definindo tamanho da tela
     size = (tamanho_bloco * (WIDTH + 9), tamanho_bloco * (HEIGHT + 2))
@@ -34,7 +41,7 @@ def main(tamanho_bloco):
     pygame.time.set_timer(AUTOCAIR, figura.vel_auto_baixo)
 
     # Variavel de limite de linha do menu
-    lim_esq_menu = (WIDTH + 4) * tamanho_bloco
+    lim_esq_menu = (WIDTH + 3.5) * tamanho_bloco
     
 # Loop principal do game
     
@@ -45,30 +52,33 @@ def main(tamanho_bloco):
         pontuacao_print = str((6 - len(str(campo.pontuacao))) * '0' + str(campo.pontuacao))
         pontuacao_sum = pygame.font.SysFont(font, tamanho_bloco, 1).render(pontuacao_print, 1, RED)
 
-        # Desenha info na tela como Prox. Figura, Pontuacao, Linhas etc
+        # Desenha info na tela como Prox. Figura, Pontuacao, Linhas etc 
         screen.fill((0, 255, 0))
         for i in range(HEIGHT):
             screen.blit(pygame.font.SysFont(font, int(tamanho_bloco * 0.7), True)
                         .render((str((HEIGHT - i))), 1, (200, 100, 100)), (3, tamanho_bloco * (i + 1)))
-            screen.blit(pygame.font.SysFont(font, int(tamanho_bloco * 0.7), True)
-                        .render(("+" + str((HEIGHT - i - 1) * 25)), 1, (200, 100, 100)),
-                        ((WIDTH + 1) * tamanho_bloco + 3, tamanho_bloco * (i + 1)))
+
         screen.blit(pygame.font.SysFont(font, tamanho_bloco, True)
                     .render("Pontuacao:", 1, RED), (lim_esq_menu, tamanho_bloco))
-        screen.blit(pontuacao_sum, (lim_esq_menu, tamanho_bloco * 2))
+        screen.blit(pontuacao_sum, (lim_esq_menu, tamanho_bloco * 2.1))
         screen.blit(pygame.font.SysFont(font, tamanho_bloco, True)
-                    .render("Prox. Figura", 1, RED), (lim_esq_menu, tamanho_bloco * 3))
+                    .render("Fig Nova:", 1, RED), (lim_esq_menu, tamanho_bloco * 3.2))
         screen.blit(pygame.font.SysFont(font, tamanho_bloco, True)
                     .render("Linhas:", 1, RED), (lim_esq_menu, tamanho_bloco * 9))
         screen.blit(pygame.font.SysFont(font, tamanho_bloco, True)
                     .render(str(campo.lines), 1, RED), (lim_esq_menu, tamanho_bloco * 10))
         screen.blit(pygame.font.SysFont(font, tamanho_bloco, True)
-                    .render("Level:", 1, RED), (lim_esq_menu, tamanho_bloco * 11))
+                    .render("Level:", 1, RED), (lim_esq_menu, tamanho_bloco * 12))
         screen.blit(pygame.font.SysFont(font, tamanho_bloco, True)
-                    .render(str(vel), 1, RED), (lim_esq_menu, tamanho_bloco * 12))
+                    .render("=========", 1, RED), (lim_esq_menu, tamanho_bloco * 13))
+        screen.blit(pygame.font.SysFont(font, tamanho_bloco, True)
+                    .render("[P] = Pause", 1, RED), (lim_esq_menu, tamanho_bloco * 14))
         
-        # Quando o campo for completo, ou seja completar alguma linha 
+        # Quando o campo for inicializado os objetos são chamados desenhando o campo e as figuras
         if campo.game:
+
+            #Música começa a tocar
+            mixer.music.set_volume(0.1)
             campo.draw(screen)
             figura.draw(screen)
             campo.fly_points(screen)
@@ -124,6 +134,7 @@ def main(tamanho_bloco):
                     figura.move_figura(campo)
         # Saida do game
         if not campo.game or PAUSE or figura.GAME_OVER:
+            pygame.mixer.music.pause()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     done = True
@@ -134,50 +145,60 @@ def main(tamanho_bloco):
             
             # Caso o player pressiona "p" ou barra de espaço desenha na tela quadrados com botões de continuar, reiniciar ou sair do game
             if PAUSE:
+                # Pausa a música de fundo
+                pygame.mixer.music.pause()
+
                 # Variaveis do bloco
                 b0x1 = tamanho_bloco * 3
                 b0x2 = tamanho_bloco * (WIDTH - 4)
                 b0y1 = tamanho_bloco * 3
                 b0y2 = tamanho_bloco * 2
+
                 #Dsenha o bloco
                 pygame.draw.rect(screen, (0, 100, 200), (b0x1, b0y1, b0x2, b0y2))
-                screen.blit(pygame.font.SysFont(font, tamanho_bloco, True).render("Continuar", 1, (0, 0, 100)),
-                            (b0x1 + WIDTH / 8 * tamanho_bloco, b0y1 + tamanho_bloco / 2))
+                screen.blit(pygame.font.SysFont(font, tamanho_bloco, True).render("CONTINUE", 1, (0, 0, 100)),
+                            (b0x1 + WIDTH / 15 * tamanho_bloco, b0y1 + tamanho_bloco / 2))
+
             # Variaveis do bloco
             b1x1 = tamanho_bloco * 3
             b1x2 = tamanho_bloco * (WIDTH - 4)
             b1y1 = tamanho_bloco * 6
             b1y2 = tamanho_bloco * 2
+
             # Desenha o bloco
             pygame.draw.rect(screen, (0, 100, 200), (b1x1, b1y1, b1x2, b1y2))
             screen.blit(pygame.font.SysFont(font, tamanho_bloco, True).render(
-                "Start" if not PAUSE and not figura.GAME_OVER else "Restart", 1, (0, 0, 100)),
-                (b1x1 + WIDTH / 6 * tamanho_bloco, b1y1 + tamanho_bloco / 2))
+                "START" if not PAUSE and not figura.GAME_OVER else "RESTART", 1, (0, 0, 100)),
+                (b1x1 + WIDTH / 7.5 * tamanho_bloco, b1y1 + tamanho_bloco / 2))
 
             # Variaveis do bloco
             b2x1 = tamanho_bloco * 3
             b2x2 = tamanho_bloco * (WIDTH - 4)
             b2y1 = tamanho_bloco * 9
             b2y2 = tamanho_bloco * 2
+
             # Desenha o bloco
             pygame.draw.rect(screen, (0, 100, 200), (b2x1, b2y1, b2x2, b2y2))
             screen.blit(pygame.font.SysFont(font, tamanho_bloco, True).render("EXIT", 1, (0, 0, 100)),
                         (b2x1 + WIDTH / 5 * tamanho_bloco, b2y1 + tamanho_bloco / 2))
 
-            # Recomeca o game da onde ele parou
+            # Recomeca o game do início, música volta a tocar
             if (b1x1 + b1x2) > mouse[0] > b1x1 and (b1y1 + b1y2) > mouse[1] > b1y1 and click[0] == 1:
                 PAUSE = False
                 campo.recomecar()
                 figura = figura.recomecar()
                 pygame.time.set_timer(AUTOCAIR, figura.vel_auto_baixo)
+                pygame.mixer.music.play(loops=-1)
              
             # Fecha o game
             elif (b2x1 + b2x2) > mouse[0] > b2x1 and (b2y1 + b2y2) > mouse[1] > b2y1 and click[0] == 1:
                 done = True
                 
-            # Recomeca o game do inicio 
+            # Quando PAUSE estiver pausado recomeça de onde o jogo e a música pararam
             elif PAUSE and (b0x1 + b0x2) > mouse[0] > b0x1 and (b0y1 + b0y2) > mouse[1] > b0y1 and click[0] == 1:
                 PAUSE = False
+                pygame.mixer.music.unpause()
+
 
         # Inverte o display
         pygame.display.flip()
@@ -186,5 +207,3 @@ def main(tamanho_bloco):
     # Saida do pygame    
     pygame.quit()
 
-# Roda a funcao main
-main(tamanho_bloco)
